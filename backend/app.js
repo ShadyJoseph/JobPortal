@@ -17,7 +17,9 @@ const adminRoutes = require("./routes/adminRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 
 const app = express();
-
+app.get('/', (req, res) => {
+  res.send('Welcome to the Job Portal API!');
+});
 // Connect to DB
 connectDB();
 

@@ -5,7 +5,11 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "build": "echo 'No build step required'",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "install": "npm ci"
   },
   "author": "shady",
   "license": "ISC",
@@ -25,5 +29,12 @@
     "morgan": "^1.10.0",
     "nodemon": "^3.1.7",
     "winston": "^3.14.2"
+  },
+  "engines": {
+    "node": ">=20.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ShadyJoseph/JobPortal"
   }
 }
