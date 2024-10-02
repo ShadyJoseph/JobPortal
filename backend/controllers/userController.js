@@ -84,7 +84,7 @@ exports.editUser = async (req, res, next) => {
 // Delete user with error handling
 exports.deleteUser = async (req, res, next) => {
     try {
-        const user = await User.findByIdAndRemove(req.params.id);
+        const user = await User.findByIdAndDelete(req.params.id);
         if (!user) {
             logger.warn(`User with ID ${req.params.id} not found for deletion`);
             return next(new ErrorResponse("User not found", 404));

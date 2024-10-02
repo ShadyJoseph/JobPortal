@@ -11,7 +11,7 @@ const errorHandler = require("./middleware/error");
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const jobRoutes=require('./routes/jobRoutes')
+const jobRoutes = require('./routes/jobRoutes')
 
 const app = express();
 
@@ -20,7 +20,7 @@ connectDB();
 
 // Middleware setup
 app.use(morgan("dev"));
-app.use(helmet()); 
+app.use(helmet());
 app.use(bodyParser.json({ limit: "5mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -29,7 +29,7 @@ app.use(cors());
 // Rate Limiting
 const limiter = rateLimit({
     windowMs: 10 * 60 * 1000, // 10 minutes
-    max: 100, 
+    max: 100,
     message: 'Too many requests, please try again later.',
 });
 app.use(limiter);

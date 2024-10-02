@@ -1,13 +1,13 @@
 const express = require('express');
-const { 
-  createJob, 
-  getAllJobs, 
-  getJobById, 
-  updateJob, 
-  deleteJob 
+const {
+  createJob,
+  getAllJobs,
+  getJobById,
+  updateJob,
+  deleteJob
 } = require('../controllers/jobController');
 const { isAuthenticated, isAdmin } = require('../middleware/auth');
-const { validateJobCreation, validateJobUpdate } = require('../middleware/validators'); // Import new validators
+const { validateJobCreation, validateJobUpdate } = require('../middleware/validators');
 const asyncHandler = require('express-async-handler');
 
 const router = express.Router();

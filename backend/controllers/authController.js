@@ -1,7 +1,7 @@
 const User = require('../models/userModel');
 const ErrorResponse = require('../utils/errorResponse');
 const { validationResult } = require('express-validator');
-const logger = require('../utils/logger'); // Import your custom logger
+const logger = require('../utils/logger');
 
 // Signup controller
 exports.signup = async (req, res, next) => {
@@ -82,11 +82,16 @@ exports.signin = async (req, res, next) => {
 const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getJwtToken();
 
-    // Cookie options with configurable expiration
-    const cookieExpireTime = process.env.COOKIE_EXPIRE_TIME || 60 * 60 * 1000; // Default: 1 hour
+    // Set cookie expiration time from environment or default to 1 hour
+    const cookieExpireTime = process.env.COOKIE_EXPIRE_TIME
+        ? parseInt(process.env.COOKIE_EXPIRE_TIME) * 1000 // Convert seconds to milliseconds
+        : 60 * 60 * 1000; // Default: 1 hour
+
+    // Ensure expirationDate is a valid Date object
+    const expirationDate = new Date(Date.now() + cookieExpireTime);
 
     const options = {
-        expires: new Date(Date.now() + cookieExpireTime), // Configurable expiration
+        expires: expirationDate, // Set the correct Date object for expiration
         httpOnly: true, // Secure access by the server only
         secure: process.env.NODE_ENV === "production", // Secure cookie only in production
         sameSite: 'Strict', // Prevent CSRF attacks

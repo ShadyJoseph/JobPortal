@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/UserModel');
+const User = require('../models/userModel')
 const ErrorResponse = require('../utils/errorResponse');
 const logger = require('../utils/logger'); // Assuming you have a logger utility
 
@@ -42,7 +42,7 @@ exports.isAuthenticated = async (req, res, next) => {
 // Middleware to check if user is an admin
 exports.isAdmin = (req, res, next) => {
   // Assume '1' is the admin role. You can define roles in a constants file for scalability.
-  const ADMIN_ROLE = 1; 
+  const ADMIN_ROLE = 1;
 
   if (!req.user) {
     logger.warn('Admin check failed: No user data found');
