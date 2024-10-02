@@ -6,7 +6,7 @@ const ErrorResponse = require('../utils/errorResponse');
 exports.createJob = async (req, res, next) => {
   try {
     // Admin check
-    if (req.user.role !== 'admin') {
+    if (req.user.role !== 1) {
       return next(new ErrorResponse('Access denied. Only admins can post jobs.', 403));
     }
 
@@ -16,18 +16,16 @@ exports.createJob = async (req, res, next) => {
       return next(new ErrorResponse('Invalid input', 400, errors.array()));
     }
 
-    const { title, company, location, description } = req.body;
-
-    // Check for missing fields
-    if (!title || !company || !location || !description) {
-      return next(new ErrorResponse('All fields are required.', 400));
-    }
+    const { title, company, location, description, salary, category, status } = req.body;
 
     const newJob = new Job({
       title,
       company,
       location,
       description,
+      salary,
+      category,
+      status,
       postedBy: req.user._id,
     });
 
@@ -81,7 +79,7 @@ exports.getJobById = async (req, res, next) => {
 // Update Job (Admin only)
 exports.updateJob = async (req, res, next) => {
   try {
-    if (req.user.role !== 'admin') {
+    if (req.user.role !== 1) {
       return next(new ErrorResponse('Access denied. Only admins can update jobs.', 403));
     }
 
@@ -90,13 +88,16 @@ exports.updateJob = async (req, res, next) => {
       return next(new ErrorResponse('Job not found', 404));
     }
 
-    const { title, company, location, description } = req.body;
+    const { title, company, location, description, salary, category, status } = req.body;
 
     // Update only fields that are present
-    job.title = title || job.title;
-    job.company = company || job.company;
-    job.location = location || job.location;
-    job.description = description || job.description;
+    if (title) job.title = title;
+    if (company) job.company = company;
+    if (location) job.location = location;
+    if (description) job.description = description;
+    if (salary) job.salary = salary;
+    if (category) job.category = category;
+    if (status) job.status = status;
 
     const updatedJob = await job.save();
     return res.status(200).json({ message: 'Job updated successfully', job: updatedJob });
@@ -108,7 +109,7 @@ exports.updateJob = async (req, res, next) => {
 // Delete Job (Admin only)
 exports.deleteJob = async (req, res, next) => {
   try {
-    if (req.user.role !== 'admin') {
+    if (req.user.role !== 1) {
       return next(new ErrorResponse('Access denied. Only admins can delete jobs.', 403));
     }
 

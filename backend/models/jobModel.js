@@ -52,8 +52,9 @@ const jobSchema = new mongoose.Schema({
   expiresAt: {
     type: Date,
     default: function () {
-      return new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+      return Date.now() + 30 * 24 * 60 * 60 * 1000; // 30 days from now
     },
+    index: { expires: '30d' }, // Job document will be automatically deleted after 30 days
   },
 });
 

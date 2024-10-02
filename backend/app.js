@@ -6,12 +6,15 @@ const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const connectDB = require("./config/db");
-require("dotenv").config();
 const errorHandler = require("./middleware/error");
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const jobRoutes = require('./routes/jobRoutes')
+const logger = require("./utils/logger");
+require("dotenv").config();
+
+// Route imports
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const jobRoutes = require("./routes/jobRoutes");
 
 const app = express();
 
@@ -28,22 +31,23 @@ app.use(cors());
 
 // Rate Limiting
 const limiter = rateLimit({
-    windowMs: 10 * 60 * 1000, // 10 minutes
-    max: 100,
-    message: 'Too many requests, please try again later.',
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 100,
+  message: "Too many requests, please try again later.",
 });
 app.use(limiter);
 
 // Routes
-app.use('/api', authRoutes);
-app.use('/api', userRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/jobs', jobRoutes);
+app.use("/api", authRoutes);
+app.use("/api", userRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/jobs", jobRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
 
+// Start server
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+  logger.info(`Server running on port ${port}`);
 });

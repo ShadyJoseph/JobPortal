@@ -1,12 +1,12 @@
+const logger = require("../utils/logger");
 const ErrorResponse = require("../utils/errorResponse");
 
 const errorHandler = (err, req, res, next) => {
-  // Create a copy of the error object and make sure we capture all its properties
   let error = { ...err };
   error.message = err.message;
 
-  // Log the error details for debugging in development
-  console.error(`Error: ${err.message}`, err);
+  // Log the error details
+  logger.error(`Error: ${err.message}`);
 
   // Mongoose bad ObjectId error (CastError)
   if (err.name === "CastError") {
@@ -22,7 +22,9 @@ const errorHandler = (err, req, res, next) => {
 
   // Mongoose validation error
   if (err.name === "ValidationError") {
-    const message = Object.values(err.errors).map(val => val.message).join(", ");
+    const message = Object.values(err.errors)
+      .map((val) => val.message)
+      .join(", ");
     error = new ErrorResponse(message, 400);
   }
 
@@ -32,7 +34,6 @@ const errorHandler = (err, req, res, next) => {
     error = new ErrorResponse(message, 404);
   }
 
-  // Handle other potential errors
   const statusCode = error.statusCode || 500;
   const message = error.message || "Server Error";
 
