@@ -34,8 +34,8 @@ app.use(cookieParser());
 
 // CORS configuration
 app.use(cors({
-  origin: '*', // Allow all origins
-  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+  origin: '*',
+  credentials: true, 
 }));
 
 // Rate Limiting

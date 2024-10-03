@@ -3,14 +3,21 @@ const ErrorResponse = require('../utils/errorResponse');
 const { validationResult } = require('express-validator');
 const logger = require('../utils/logger');
 
+const HTTP_STATUS = {
+    OK: 200,
+    CREATED: 201,
+    BAD_REQUEST: 400,
+    UNAUTHORIZED: 401,
+    NOT_FOUND: 404,
+};
+
 // Signup controller
 exports.signup = async (req, res, next) => {
-    // Validate input data
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const errorMsg = errors.array().map(err => err.msg).join(', ');
         logger.warn(`Signup failed: ${errorMsg}`, { email: req.body.email });
-        return next(new ErrorResponse(errorMsg, 400));
+        return next(new ErrorResponse(errorMsg, HTTP_STATUS.BAD_REQUEST));
     }
 
     const { email, password } = req.body;
@@ -20,19 +27,19 @@ exports.signup = async (req, res, next) => {
         const userExist = await User.findOne({ email });
         if (userExist) {
             logger.warn(`Signup attempt with already registered email: ${email}`);
-            return next(new ErrorResponse("Email already registered", 400));
+            return next(new ErrorResponse("Email already registered", HTTP_STATUS.BAD_REQUEST));
         }
 
-        // Password security: check minimum length (example: 8 characters)
+        // Password security: check minimum length
         if (password.length < 8) {
             logger.warn(`Signup failed due to short password: ${email}`);
-            return next(new ErrorResponse("Password must be at least 8 characters long", 400));
+            return next(new ErrorResponse("Password must be at least 8 characters long", HTTP_STATUS.BAD_REQUEST));
         }
 
         // Create new user
         const user = await User.create(req.body);
         logger.info(`New user signed up: ${email}`, { userId: user._id });
-        sendTokenResponse(user, 201, res); // Send token upon successful signup
+        sendTokenResponse(user, HTTP_STATUS.CREATED, res); // Send token upon successful signup
     } catch (error) {
         logger.error(`Signup error for ${email}: ${error.message}`, { stack: error.stack });
         next(error); // Pass error to global error handler
@@ -45,14 +52,14 @@ exports.signin = async (req, res, next) => {
     if (!errors.isEmpty()) {
         const errorMsg = errors.array().map(err => err.msg).join(', ');
         logger.warn(`Signin failed: ${errorMsg}`, { email: req.body.email });
-        return next(new ErrorResponse(errorMsg, 400));
+        return next(new ErrorResponse(errorMsg, HTTP_STATUS.BAD_REQUEST));
     }
 
     const { email, password } = req.body;
 
     if (!email || !password) {
         logger.warn(`Signin attempt with missing credentials: ${email || 'No email provided'}`);
-        return next(new ErrorResponse("Please provide an email and password", 400));
+        return next(new ErrorResponse("Please provide an email and password", HTTP_STATUS.BAD_REQUEST));
     }
 
     try {
@@ -60,18 +67,18 @@ exports.signin = async (req, res, next) => {
         const user = await User.findOne({ email }).select("+password");
         if (!user) {
             logger.warn(`Signin failed due to invalid credentials: ${email}`);
-            return next(new ErrorResponse("Invalid credentials", 401));
+            return next(new ErrorResponse("Invalid credentials", HTTP_STATUS.UNAUTHORIZED));
         }
 
         // Check if password matches
         const isMatched = await user.comparePassword(password);
         if (!isMatched) {
             logger.warn(`Signin failed due to invalid password: ${email}`);
-            return next(new ErrorResponse("Invalid credentials", 401));
+            return next(new ErrorResponse("Invalid credentials", HTTP_STATUS.UNAUTHORIZED));
         }
 
         logger.info(`User signed in: ${email}`, { userId: user._id });
-        sendTokenResponse(user, 200, res); // Send token upon successful signin
+        sendTokenResponse(user, HTTP_STATUS.OK, res); // Send token upon successful signin
     } catch (error) {
         logger.error(`Signin error for ${email}: ${error.message}`, { stack: error.stack });
         next(error);
@@ -82,25 +89,21 @@ exports.signin = async (req, res, next) => {
 const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getJwtToken();
 
-    // Set cookie expiration time from environment or default to 1 hour
     const cookieExpireTime = process.env.COOKIE_EXPIRE_TIME
-        ? parseInt(process.env.COOKIE_EXPIRE_TIME) * 1000 // Convert seconds to milliseconds
+        ? parseInt(process.env.COOKIE_EXPIRE_TIME) * 1000
         : 60 * 60 * 1000; // Default: 1 hour
 
-    // Ensure expirationDate is a valid Date object
     const expirationDate = new Date(Date.now() + cookieExpireTime);
 
     const options = {
-        expires: expirationDate, // Set the correct Date object for expiration
-        httpOnly: true, // Secure access by the server only
-        secure: process.env.NODE_ENV === "production", // Secure cookie only in production
-        sameSite: 'Strict', // Prevent CSRF attacks
+        expires: expirationDate,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: 'Strict',
     };
 
-    // Log successful token generation
     logger.info(`JWT token issued for user: ${user.email}`, { userId: user._id });
 
-    // Send response
     res.status(statusCode)
         .cookie('token', token, options)
         .json({
@@ -120,7 +123,6 @@ const sendTokenResponse = (user, statusCode, res) => {
 exports.logout = (req, res, next) => {
     const { email } = req.user || {};
 
-    // Optionally: Add token to a blacklist to prevent reuse (for enhanced security)
     res.clearCookie('token', {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -129,7 +131,7 @@ exports.logout = (req, res, next) => {
 
     logger.info(`User logged out: ${email}`, { userId: req.user ? req.user._id : 'Unknown' });
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
         success: true,
         message: "Logged out successfully",
     });
@@ -139,15 +141,14 @@ exports.logout = (req, res, next) => {
 exports.userProfile = async (req, res, next) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
-
         if (!user) {
             logger.warn(`User profile fetch failed: User not found with id ${req.user.id}`);
-            return next(new ErrorResponse("User not found", 404));
+            return next(new ErrorResponse("User not found", HTTP_STATUS.NOT_FOUND));
         }
 
         logger.info(`User profile fetched: ${user.email}`, { userId: user._id });
 
-        res.status(200).json({
+        res.status(HTTP_STATUS.OK).json({
             success: true,
             user,
         });
@@ -156,3 +157,4 @@ exports.userProfile = async (req, res, next) => {
         next(error);
     }
 };
+
