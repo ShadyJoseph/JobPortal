@@ -37,10 +37,15 @@ const validateSignup = [
     return true;
   }),
 ];
+const validateSignin = [
+  check('email', 'Please include a valid email').isEmail(),
+  check('password', 'Password must be at least 8 characters long').isLength({ min: 8 }),
+];
 
 module.exports = {
   validateJobCreation,
   validateJobUpdate,
   validateUserEdit,
   validateSignup,
+  validateSignin
 };
