@@ -29,18 +29,15 @@ const Header = () => {
 
         {/* Navigation Links */}
         <nav className="flex items-center space-x-6">
-          <NavLink 
-            exact 
+          <NavLink
             to="/" 
-            className="text-white hover:text-gray-300 transition duration-200"
-            activeClassName="text-blue-500" // Active link style
+            className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
           >
             Home
           </NavLink>
           <NavLink 
             to="/jobs" 
-            className="text-white hover:text-gray-300 transition duration-200"
-            activeClassName="text-blue-500"
+            className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
           >
             Jobs
           </NavLink>
@@ -49,15 +46,13 @@ const Header = () => {
             <>
               <NavLink 
                 to="/post-job" 
-                className="text-white hover:text-gray-300 transition duration-200"
-                activeClassName="text-blue-500"
+                className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
               >
                 Post a Job
               </NavLink>
               <NavLink 
                 to="/profile" 
-                className="text-white hover:text-gray-300 transition duration-200"
-                activeClassName="text-blue-500"
+                className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
               >
                 {user?.firstName}'s Profile
               </NavLink>
@@ -72,15 +67,13 @@ const Header = () => {
             <>
               <NavLink 
                 to="/signin" 
-                className="text-white hover:text-gray-300 transition duration-200"
-                activeClassName="text-blue-500"
+                className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
               >
                 Sign In
               </NavLink>
               <NavLink 
                 to="/register" 
-                className="text-white hover:text-gray-300 transition duration-200"
-                activeClassName="text-blue-500"
+                className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
               >
                 Register
               </NavLink>
@@ -90,8 +83,7 @@ const Header = () => {
           {isAuthenticated && user?.role === 'admin' && (
             <NavLink 
               to="/admin/dashboard" 
-              className="text-white hover:text-gray-300 transition duration-200"
-              activeClassName="text-blue-500"
+              className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
             >
               Admin Dashboard
             </NavLink>
