@@ -17,9 +17,11 @@ const adminRoutes = require("./routes/adminRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 
 const app = express();
+
 app.get('/', (req, res) => {
   res.send('Welcome to the Job Portal API!');
 });
+
 // Connect to DB
 connectDB();
 
@@ -29,7 +31,12 @@ app.use(helmet());
 app.use(bodyParser.json({ limit: "5mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors());
+
+// CORS configuration
+app.use(cors({
+  origin: '*', // Allow all origins
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+}));
 
 // Rate Limiting
 const limiter = rateLimit({

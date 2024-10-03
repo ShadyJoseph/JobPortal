@@ -11,22 +11,26 @@ export const signin = createAsyncThunk(
       localStorage.setItem('token', response.data.token);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data || 'An error occurred');
+      return rejectWithValue(error.response?.data || 'An error occurred');
     }
   }
 );
 
 // Async action to handle logout
-export const logout = createAsyncThunk('auth/logout', async () => {
-  await api.get('/logout');
-  // Clear token and user data
-  localStorage.removeItem('token');
-  return null;
+export const logout = createAsyncThunk('/logout', async () => {
+  try {
+    await api.get('/logout');
+    // Clear token and user data
+    localStorage.removeItem('token');
+    return null;
+  } catch (error) {
+    console.error('Logout failed:', error);
+  }
 });
 
 // Async action to handle signup
 export const signup = createAsyncThunk(
-  'auth/signup',
+  '/signup',
   async (userData, { rejectWithValue }) => {
     try {
       const response = await api.post('/signup', userData);
@@ -34,7 +38,7 @@ export const signup = createAsyncThunk(
       localStorage.setItem('token', response.data.token);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data || 'An error occurred');
+      return rejectWithValue(error.response?.data || 'An error occurred');
     }
   }
 );

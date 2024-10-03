@@ -25,6 +25,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.user;
         state.token = action.payload.token;
+        localStorage.setItem('token', action.payload.token); // Save token to localStorage
       })
       .addCase(signin.rejected, (state, action) => {
         state.loading = false;
@@ -41,6 +42,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.user;
         state.token = action.payload.token;
+        localStorage.setItem('token', action.payload.token); // Save token to localStorage
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
@@ -52,6 +54,7 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.user = null;
         state.token = null;
+        localStorage.removeItem('token'); // Remove token from localStorage
       });
   },
 });
