@@ -1,35 +1,40 @@
-// src/store/actions/authActions.js
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../utils/api';
 
 // Async action to handle login
-export const login = createAsyncThunk(
-    'auth/login',
-    async (userData, { rejectWithValue }) => {
-        try {
-            const response = await api.post('/auth/signin', userData);
-            return response.data; // token and user data
-        } catch (error) {
-            return rejectWithValue(error.response.data);
-        }
+export const signin = createAsyncThunk(
+  'auth/signin',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await api.post('/signin', userData);
+      // Save token to localStorage
+      localStorage.setItem('token', response.data.token);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data || 'An error occurred');
     }
+  }
 );
 
 // Async action to handle logout
 export const logout = createAsyncThunk('auth/logout', async () => {
-    await api.get('/auth/logout'); // Assuming logout is a GET request
-    return null; // Clear user data on logout
+  await api.get('/logout');
+  // Clear token and user data
+  localStorage.removeItem('token');
+  return null;
 });
 
 // Async action to handle signup
 export const signup = createAsyncThunk(
   'auth/signup',
   async (userData, { rejectWithValue }) => {
-      try {
-          const response = await api.post('/auth/signup', userData);
-          return response.data; // token and user data
-      } catch (error) {
-          return rejectWithValue(error.response.data);
-      }
+    try {
+      const response = await api.post('/signup', userData);
+      // Save token to localStorage
+      localStorage.setItem('token', response.data.token);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data || 'An error occurred');
+    }
   }
 );

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { signup } from '../store/actions/authActions';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; // Icons for password visibility toggle
 import { Link } from 'react-router-dom'; // For linking to the sign-in page
 
 const SignUp = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Initialize useNavigate for redirection
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -54,10 +56,10 @@ const SignUp = () => {
       .unwrap()
       .then(() => {
         setIsLoading(false);
-        setSuccessMessage('Sign up successful! Please sign in.');
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
+        setSuccessMessage('Sign up successful! Redirecting to home...');
+        setTimeout(() => {
+          navigate('/'); // Navigate to the home page after sign-up
+        }, 1500); // Short delay before redirect
       })
       .catch((err) => {
         setIsLoading(false);

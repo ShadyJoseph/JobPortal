@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { login } from '../store/actions/authActions';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { signin } from '../store/actions/authActions';
 import { Link } from 'react-router-dom'; // For linking to the Register page
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; // For password visibility
 
 const SignIn = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Initialize navigate hook
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false); // Password visibility toggle
@@ -33,9 +36,12 @@ const SignIn = () => {
 
     setIsLoading(true); // Start loading
 
-    dispatch(login({ email, password }))
+    dispatch(signin({ email, password }))
       .unwrap()
-      .then(() => setIsLoading(false)) // Stop loading on success
+      .then(() => {
+        setIsLoading(false); // Stop loading on success
+        navigate('/'); // Navigate to the home page after successful login
+      })
       .catch((err) => {
         setIsLoading(false); // Stop loading on error
         setError(err.message);
