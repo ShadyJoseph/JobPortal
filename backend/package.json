@@ -8,8 +8,7 @@
     "dev": "nodemon app.js",
     "build": "echo 'No build step required'",
     "lint": "eslint .",
-    "format": "prettier --write .",
-    "install": "npm ci"
+    "format": "prettier --write ."
   },
   "author": "shady",
   "license": "ISC",
