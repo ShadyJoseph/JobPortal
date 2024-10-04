@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://jobportal-i3uh.onrender.com/api', // Your backend URL
+  baseURL: process.env.REACT_APP_API_URL, // Use the base URL from .env
   withCredentials: true, // Enable cookies
 });
 
