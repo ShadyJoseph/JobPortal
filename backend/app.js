@@ -18,33 +18,19 @@ const jobRoutes = require("./routes/jobRoutes");
 
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('Welcome to the Job Portal API!');
-});
-
 // Connect to DB
 connectDB();
 
 // Middleware setup
-app.use(morgan("dev"));
-app.use(helmet());
-app.use(bodyParser.json({ limit: "5mb" }));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-
-// CORS configuration
-app.use(cors({
-  origin: 'http://localhost:3000', // Frontend origin
-  credentials: true,  // Allow credentials (cookies, headers)
-}));
-
-// Handle preflight requests
-app.options('*', cors({
-  origin: 'http://localhost:3000',
-  credentials: true,
-}));
-
-
+app.use(morgan("dev")); // Logging middleware
+app.use(helmet()); // Security headers
+app.use(cors({ 
+  origin: 'http://localhost:3000', // Allow requests from your frontend
+  credentials: true, // Allow credentials (cookies, headers)
+})); 
+app.use(bodyParser.json({ limit: "5mb" })); // Body parser for JSON
+app.use(bodyParser.urlencoded({ extended: true })); // Body parser for URL-encoded data
+app.use(cookieParser()); // Cookie parser
 
 // Rate Limiting
 const limiter = rateLimit({
@@ -53,6 +39,11 @@ const limiter = rateLimit({
   message: "Too many requests, please try again later.",
 });
 app.use(limiter);
+
+// Welcome Route
+app.get('/', (req, res) => {
+  res.send('Welcome to the Job Portal API!');
+});
 
 // Routes with `/api` prefix
 app.use("/api", authRoutes);
