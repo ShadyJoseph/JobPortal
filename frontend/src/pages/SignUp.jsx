@@ -7,7 +7,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Loader from '../components/Loader';
 
-// Reusable InputField component
 const InputField = ({ id, label, type, formik, showToggle, toggleVisibility }) => (
   <div className="mb-4 relative">
     <label className="block text-sm font-medium mb-1" htmlFor={id}>
@@ -41,8 +40,8 @@ const SignUp = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [submitError, setSubmitError] = useState(''); // State for submission errors
 
-  // Password strength utility
   const getPasswordStrength = (password) => {
     const strengthConditions = [
       password.length >= 6,
@@ -57,7 +56,6 @@ const SignUp = () => {
     return 'Strong';
   };
 
-  // Formik form handling
   const formik = useFormik({
     initialValues: {
       firstName: '',
@@ -83,21 +81,14 @@ const SignUp = () => {
         .oneOf([Yup.ref('password'), null], "Passwords don't match")
         .required('Confirm Password is required.'),
     }),
-    onSubmit: async (values, { setSubmitting, setErrors }) => {
+    onSubmit: async (values, { setSubmitting }) => {
       try {
-        await dispatch(
-          signup({
-            firstName: values.firstName,
-            lastName: values.lastName,
-            email: values.email,
-            password: values.password,
-            confirmPassword:values.confirmPassword
-          })
-        ).unwrap();
+        await dispatch(signup(values)).unwrap();
         navigate('/');
       } catch (err) {
-        const message = err.message || 'An unexpected error occurred';
-        setErrors({ submit: message });
+        // Extract the error message from error.response.data if available
+        const message = err.response?.data || 'An unexpected error occurred';
+        setSubmitError(message); // Set the error message to be displayed
       } finally {
         setSubmitting(false);
       }
@@ -109,7 +100,12 @@ const SignUp = () => {
       <div className="bg-white p-8 rounded shadow-md w-96">
         <h2 className="text-2xl font-bold mb-6">Sign Up</h2>
 
-        {formik.errors.submit && <p className="text-red-500 mb-4">{formik.errors.submit}</p>}
+        {submitError && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+            <strong className="font-bold">Error: </strong>
+            <span className="block sm:inline">{submitError}</span> {/* Display the submit error */}
+          </div>
+        )}
 
         <form onSubmit={formik.handleSubmit}>
           <InputField
@@ -130,8 +126,6 @@ const SignUp = () => {
             type="email"
             formik={formik}
           />
-
-          {/* Password */}
           <InputField
             id="password"
             label="Password"
@@ -151,8 +145,6 @@ const SignUp = () => {
           >
             Password Strength: {getPasswordStrength(formik.values.password)}
           </p>
-
-          {/* Confirm Password */}
           <InputField
             id="confirmPassword"
             label="Confirm Password"
@@ -161,8 +153,6 @@ const SignUp = () => {
             showToggle={showConfirmPassword}
             toggleVisibility={() => setShowConfirmPassword(!showConfirmPassword)}
           />
-
-          {/* Submit Button */}
           <button
             type="submit"
             className={`w-full p-2 rounded transition duration-200 flex items-center justify-center ${
@@ -173,14 +163,13 @@ const SignUp = () => {
             disabled={formik.isSubmitting}
           >
             {formik.isSubmitting ? (
-              <Loader height="25" width="25" color="#ffffff" />
+              <Loader height="25" width="25" />
             ) : (
               'Sign Up'
             )}
           </button>
         </form>
 
-        {/* Already have an account? */}
         <div className="mt-4 text-sm text-center">
           <span>Already have an account? </span>
           <Link to="/signin" className="text-blue-500 hover:underline">

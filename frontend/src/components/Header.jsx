@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import Logo from '../assets/Logo.jpg'; 
-import { logout } from '../store/actions/authActions'; 
+import Logo from '../assets/Logo.jpg';
+import { logout } from '../store/actions/authActions';
 
 const Header = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated, user } = useSelector((state) => state.auth); 
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -30,29 +30,29 @@ const Header = () => {
         {/* Navigation Links */}
         <nav className="flex items-center space-x-6">
           <NavLink
-            to="/" 
-            className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
+            to="/"
+            className={({ isActive }) =>
+              isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200'
+            }
           >
             Home
           </NavLink>
-          <NavLink 
-            to="/jobs" 
-            className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
+          <NavLink
+            to="/jobs"
+            className={({ isActive }) =>
+              isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200'
+            }
           >
             Jobs
           </NavLink>
 
           {isAuthenticated ? (
             <>
-              <NavLink 
-                to="/post-job" 
-                className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
-              >
-                Post a Job
-              </NavLink>
-              <NavLink 
-                to="/profile" 
-                className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
+              <NavLink
+                to="/profile"
+                className={({ isActive }) =>
+                  isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200'
+                }
               >
                 {user?.firstName}'s Profile
               </NavLink>
@@ -62,43 +62,48 @@ const Header = () => {
               >
                 Logout
               </button>
+              {user?.role === 1 && (
+                <>
+                  <NavLink
+                    to="/admin/dashboard"
+                    className={({ isActive }) =>
+                      isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200'
+                    }
+                  >
+                    Admin Dashboard
+                  </NavLink>
+                  <NavLink
+                    to="/post-job"
+                    className={({ isActive }) =>
+                      isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200'
+                    }
+                  >
+                    Post a Job
+                  </NavLink>
+                </>
+              )}
             </>
           ) : (
             <>
-              <NavLink 
-                to="/signin" 
-                className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
+              <NavLink
+                to="/signin"
+                className={({ isActive }) =>
+                  isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200'
+                }
               >
                 Sign In
               </NavLink>
-              <NavLink 
-                to="/register" 
-                className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
+              <NavLink
+                to="/register"
+                className={({ isActive }) =>
+                  isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200'
+                }
               >
                 Register
               </NavLink>
             </>
           )}
-
-          {isAuthenticated && user?.role === 'admin' && (
-            <NavLink 
-              to="/admin/dashboard" 
-              className={({ isActive }) => (isActive ? 'text-blue-500' : 'text-white hover:text-gray-300 transition duration-200')}
-            >
-              Admin Dashboard
-            </NavLink>
-          )}
         </nav>
-      </div>
-
-      {/* Mobile Responsiveness */}
-      <div className="container mx-auto block lg:hidden text-center mt-2">
-        <button className="text-white focus:outline-none">
-          {/* Menu Icon (hamburger) */}
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-          </svg>
-        </button>
       </div>
     </header>
   );

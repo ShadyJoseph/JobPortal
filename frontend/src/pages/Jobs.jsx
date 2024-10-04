@@ -43,7 +43,7 @@ const JobsPage = () => {
             key={job.id}
             className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105"
           >
-            <h2 className="text-2xl font-semibold mb-2">{job.title}</h2>
+            <h2 className="text-2xl font-bold mb-4 text-blue-600">{job.title}</h2>
             <p className="text-gray-700 mb-1">{job.company}</p>
             <p className="text-gray-600 mb-1">{job.location}</p>
             <p className="text-gray-500 mb-4">{job.description}</p>

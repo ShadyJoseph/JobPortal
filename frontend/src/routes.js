@@ -1,6 +1,5 @@
-
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux'; // Import useSelector to access the Redux state
+import { useSelector } from 'react-redux';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/Home';
@@ -10,9 +9,10 @@ import SignUp from './pages/SignUp';
 import Jobs from './pages/Jobs';
 import JobDetailsPage from './pages/JobsDetails';
 import UserProfile from './pages/UserProfile';
+import CreateJob from './pages/CreateJob';
 
 const AppRoutes = () => {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); // Get authentication state
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   return (
     <Router>
@@ -20,15 +20,19 @@ const AppRoutes = () => {
         <Header />
         <main className="flex-grow pt-16">
           <Routes>
-            {/* Redirect to Home if authenticated, otherwise to SignUp */}
-            <Route path="/" element={isAuthenticated ? <Navigate to="/home" /> : <SignUp />} />
-            <Route path="/home" element={<HomePage />} />
+            {/* Public routes available to unauthenticated users */}
+            <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/register" element={<SignUp />} />
-            <Route path="/jobs/:id" element={<JobDetailsPage />} />
             <Route path="/jobs" element={<Jobs />} />
-            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/jobs/:id" element={<JobDetailsPage />} />
+
+            {/* Restricted routes for authenticated users only */}
+            <Route path="/profile" element={isAuthenticated ? <UserProfile /> : <Navigate to="/signin" />} />
+            <Route path="/post-job" element={isAuthenticated ? <CreateJob /> : <Navigate to="/signin" />} />
+
+            {/* Authentication routes */}
+            <Route path="/signin" element={isAuthenticated ? <Navigate to="/" /> : <SignIn />} />
+            <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <SignUp />} />
           </Routes>
         </main>
         <Footer />
