@@ -7,7 +7,11 @@ export const signin = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await api.post('/auth/signin', userData);
-      localStorage.setItem('token', response.data.token); // Store JWT token
+      const { token, user } = response.data;
+      
+      localStorage.setItem('token', token); // Store JWT token
+      localStorage.setItem('user', JSON.stringify(user)); // Store user data
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'An error occurred');
@@ -20,6 +24,7 @@ export const logout = createAsyncThunk('/auth/logout', async () => {
   try {
     await api.get('/auth/logout'); // Backend clears the cookie
     localStorage.removeItem('token'); // Remove token from localStorage
+    localStorage.removeItem('user'); // Remove user data from localStorage
     return null;
   } catch (error) {
     console.error('Logout failed:', error);
@@ -28,14 +33,20 @@ export const logout = createAsyncThunk('/auth/logout', async () => {
 
 // Async action to handle signup
 export const signup = createAsyncThunk(
-  '/auth/signup',
+  'auth/signup',
   async (userData, { rejectWithValue }) => {
     try {
       const response = await api.post('/auth/signup', userData);
-      localStorage.setItem('token', response.data.token); // Store JWT token
-      return response.data;
+      const { token, user } = response.data;
+
+      console.log('Signup Response:', response.data); // Log the response data
+      localStorage.setItem('token', token); // Store JWT token
+      localStorage.setItem('user', JSON.stringify(user)); // Store user data
+
+      return response.data; // Return the response data on success
     } catch (error) {
-      return rejectWithValue(error.response?.data || 'An error occurred');
+      console.error('Signup Error:', error.response?.data || 'An error occurred'); // Log the error for debugging
+      return rejectWithValue(error.response?.data || 'An error occurred'); // Handle errors
     }
   }
 );

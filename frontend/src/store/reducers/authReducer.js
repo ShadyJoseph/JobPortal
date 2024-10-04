@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { signin, logout, signup } from '../actions/authActions';
 
 const initialState = {
-  user: null,
+  user: JSON.parse(localStorage.getItem('user')) || null, // Get user from localStorage
   token: localStorage.getItem('token') || null, // Get token from localStorage
   isAuthenticated: !!localStorage.getItem('token'), // Check if token exists
   loading: false,
@@ -23,9 +23,10 @@ const authSlice = createSlice({
       .addCase(signin.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.user = action.payload.user; // Assign user from payload
+        state.token = action.payload.token; // Assign token from payload
         localStorage.setItem('token', action.payload.token); // Store JWT token
+        localStorage.setItem('user', JSON.stringify(action.payload.user)); // Store user data
       })
       .addCase(signin.rejected, (state, action) => {
         state.loading = false;
@@ -40,9 +41,10 @@ const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.user = action.payload.user; // Assign user from payload
+        state.token = action.payload.token; // Assign token from payload
         localStorage.setItem('token', action.payload.token); // Store JWT token
+        localStorage.setItem('user', JSON.stringify(action.payload.user)); // Store user data
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
@@ -55,6 +57,7 @@ const authSlice = createSlice({
         state.user = null;
         state.token = null;
         localStorage.removeItem('token'); // Remove token from localStorage
+        localStorage.removeItem('user'); // Remove user data from localStorage
       });
   },
 });

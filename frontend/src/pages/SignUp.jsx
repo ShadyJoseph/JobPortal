@@ -91,6 +91,7 @@ const SignUp = () => {
             lastName: values.lastName,
             email: values.email,
             password: values.password,
+            confirmPassword:values.confirmPassword
           })
         ).unwrap();
         navigate('/');
