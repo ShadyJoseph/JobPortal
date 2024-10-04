@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../assets/Logo.jpg'; 
 import { FaFacebookF, FaTwitter, FaLinkedinIn } from 'react-icons/fa'; 
+import { BsFillHeartFill } from 'react-icons/bs'; // Add more icons as needed
 
 const Footer = () => {
   return (
@@ -27,15 +28,13 @@ const Footer = () => {
           <Link to="/about" className="text-gray-400 hover:text-white transition-all duration-300 ease-in-out">
             About
           </Link>
-          <Link to="/contact" className="text-gray-400 hover:text-white transition-all duration-300 ease-in-out">
-            Contact
-          </Link>
         </nav>
 
         {/* Copyright and Social Links */}
         <div className="text-center md:text-right">
           <p className="text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} Job Portal. All Rights Reserved.
+            &copy; {new Date().getFullYear()} Job Portal. All Rights Reserved. 
+            <span className="text-red-500"><BsFillHeartFill className="inline-block h-4 w-4 mx-1" /></span>
           </p>
 
           {/* Social Media Links */}
@@ -46,7 +45,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="text-white hover:text-gray-300 transition-all duration-300 ease-in-out"
             >
-              <FaFacebookF className="bg-gray-800 p-2 rounded-full h-8 w-8" />
+              <FaFacebookF className="bg-gray-800 p-2 rounded-full h-8 w-8 hover:bg-blue-600 transition duration-300" />
             </a>
             <a
               href="https://twitter.com"
@@ -54,7 +53,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="text-white hover:text-gray-300 transition-all duration-300 ease-in-out"
             >
-              <FaTwitter className="bg-gray-800 p-2 rounded-full h-8 w-8" />
+              <FaTwitter className="bg-gray-800 p-2 rounded-full h-8 w-8 hover:bg-blue-400 transition duration-300" />
             </a>
             <a
               href="https://linkedin.com"
@@ -62,7 +61,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="text-white hover:text-gray-300 transition-all duration-300 ease-in-out"
             >
-              <FaLinkedinIn className="bg-gray-800 p-2 rounded-full h-8 w-8" />
+              <FaLinkedinIn className="bg-gray-800 p-2 rounded-full h-8 w-8 hover:bg-blue-700 transition duration-300" />
             </a>
           </div>
         </div>
