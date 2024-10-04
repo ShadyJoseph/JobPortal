@@ -1,12 +1,12 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom'; // Use NavLink for active link styles
+import { Link, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Logo from '../assets/Logo.jpg'; 
-import { logout } from '../store/actions/authActions'; // Assuming you have a logout action
+import { logout } from '../store/actions/authActions'; 
 
 const Header = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated, user } = useSelector((state) => state.auth); // Assuming auth state in Redux
+  const { isAuthenticated, user } = useSelector((state) => state.auth); 
 
   const handleLogout = () => {
     dispatch(logout());
