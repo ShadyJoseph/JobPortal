@@ -34,9 +34,17 @@ app.use(cookieParser());
 
 // CORS configuration
 app.use(cors({
-  origin: '*',
-  credentials: true, 
+  origin: 'http://localhost:3000', // Frontend origin
+  credentials: true,  // Allow credentials (cookies, headers)
 }));
+
+// Handle preflight requests
+app.options('*', cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
+
+
 
 // Rate Limiting
 const limiter = rateLimit({
@@ -46,7 +54,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Routes
+// Routes with `/api` prefix
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api/admin", adminRoutes);

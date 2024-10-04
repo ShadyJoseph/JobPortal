@@ -1,31 +1,29 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://jobportal-i3uh.onrender.com/api',
+  baseURL: 'https://jobportal-i3uh.onrender.com/api', // Your backend URL
   withCredentials: true, // Enable cookies
 });
 
-// Interceptor to attach token to every request
+// Request Interceptor to attach token to every request
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`; // Attach Bearer token
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Interceptor to handle token expiration and auto logout
+// Response Interceptor to handle token expiration
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // If unauthorized (token expired or invalid), trigger logout
-      localStorage.removeItem('token');
-      // Optionally notify the user
-      window.location.href = '/signin'; // Redirect to login
+      localStorage.removeItem('token'); // Remove token if unauthorized
+      window.location.href = '/signin'; // Redirect to signin page
     }
     return Promise.reject(error);
   }

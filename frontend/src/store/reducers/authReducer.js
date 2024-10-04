@@ -3,8 +3,8 @@ import { signin, logout, signup } from '../actions/authActions';
 
 const initialState = {
   user: null,
-  token: localStorage.getItem('token') || null, // Load token from localStorage on startup
-  isAuthenticated: !!localStorage.getItem('token'), // Check if user is authenticated
+  token: localStorage.getItem('token') || null, // Get token from localStorage
+  isAuthenticated: !!localStorage.getItem('token'), // Check if token exists
   loading: false,
   error: null,
 };
@@ -15,7 +15,7 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Handle login
+      // Handle signin
       .addCase(signin.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -25,7 +25,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.user;
         state.token = action.payload.token;
-        localStorage.setItem('token', action.payload.token); // Save token to localStorage
+        localStorage.setItem('token', action.payload.token); // Store JWT token
       })
       .addCase(signin.rejected, (state, action) => {
         state.loading = false;
@@ -42,7 +42,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.user;
         state.token = action.payload.token;
-        localStorage.setItem('token', action.payload.token); // Save token to localStorage
+        localStorage.setItem('token', action.payload.token); // Store JWT token
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
