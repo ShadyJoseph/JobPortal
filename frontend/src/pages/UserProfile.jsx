@@ -44,7 +44,7 @@ const UserProfile = () => {
 
     try {
       // Dispatch the editUser action with all user data
-      await dispatch(editUser(user._id, { firstName, lastName, email }));
+      await dispatch(editUser(user.id, { firstName, lastName, email }));
       setIsEditing(false); // Exit edit mode after successful update
     } catch (err) {
       setError('Failed to update profile. Please try again.'); // Set error if the update fails
