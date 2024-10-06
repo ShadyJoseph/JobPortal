@@ -16,6 +16,7 @@ const CreateJob = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -30,12 +31,14 @@ const CreateJob = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(false);
 
     try {
       const response = await api.post('/jobs', formData);
       if (response.status === 201) {
+        setSuccess(true);
         console.log('Job created:', response.data);
-        navigate('/jobs');
+        setTimeout(() => navigate('/jobs'), 2000); // Navigate after 2 seconds
       }
     } catch (error) {
       console.error('Error creating job:', error.response?.data || error.message);
@@ -55,6 +58,12 @@ const CreateJob = () => {
         </div>
       )}
 
+      {success && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+          Job created successfully! Redirecting...
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-8 mb-4">
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
@@ -67,6 +76,7 @@ const CreateJob = () => {
             value={formData.title}
             onChange={handleChange}
             required
+            aria-label="Job title"
             className="shadow-md appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
             placeholder="Enter job title"
           />
@@ -83,6 +93,7 @@ const CreateJob = () => {
             value={formData.company}
             onChange={handleChange}
             required
+            aria-label="Company name"
             className="shadow-md appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
             placeholder="Enter company name"
           />
@@ -99,6 +110,7 @@ const CreateJob = () => {
             value={formData.location}
             onChange={handleChange}
             required
+            aria-label="Job location"
             className="shadow-md appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
             placeholder="Enter job location"
           />
@@ -114,7 +126,8 @@ const CreateJob = () => {
             value={formData.description}
             onChange={handleChange}
             required
-            className="shadow-md appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+            aria-label="Job description"
+            className="shadow-md appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out resize-y"
             placeholder="Enter job description"
           />
         </div>
@@ -130,6 +143,7 @@ const CreateJob = () => {
             value={formData.salary}
             onChange={handleChange}
             min="0"
+            aria-label="Salary"
             className="shadow-md appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
             placeholder="Enter salary (optional)"
           />
@@ -145,6 +159,7 @@ const CreateJob = () => {
             value={formData.category}
             onChange={handleChange}
             required
+            aria-label="Job category"
             className="shadow-md appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
           >
             <option value="Engineering">Engineering</option>
@@ -165,6 +180,7 @@ const CreateJob = () => {
             value={formData.status}
             onChange={handleChange}
             required
+            aria-label="Job status"
             className="shadow-md appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
           >
             <option value="open">Open</option>
@@ -181,8 +197,15 @@ const CreateJob = () => {
                 ? 'bg-gray-400 cursor-not-allowed'
                 : 'bg-blue-500 hover:bg-blue-700 text-white'
             }`}
+            aria-label="Submit job form"
           >
-            {loading ? <Loader height="25" width="25" /> : 'Create Job'}
+            {loading ? (
+              <>
+                <Loader height="25" width="25" /> Creating...
+              </>
+            ) : (
+              'Create Job'
+            )}
           </button>
         </div>
       </form>

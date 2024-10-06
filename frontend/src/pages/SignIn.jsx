@@ -52,7 +52,7 @@ const SignIn = () => {
         )}
 
         {/* Sign In Form */}
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit} noValidate>
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1" htmlFor="email">Email</label>
             <input
@@ -61,6 +61,7 @@ const SignIn = () => {
               {...formik.getFieldProps('email')}
               className={`w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 
                 ${formik.touched.email && formik.errors.email ? 'border-red-500' : ''}`}
+              aria-label="Enter your email"
             />
             {formik.touched.email && formik.errors.email && (
               <div className="text-red-500 text-sm mt-1">{formik.errors.email}</div>
@@ -75,14 +76,16 @@ const SignIn = () => {
               {...formik.getFieldProps('password')}
               className={`w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 
                 ${formik.touched.password && formik.errors.password ? 'border-red-500' : ''}`}
+              aria-label="Enter your password"
             />
-            <span
-              className="absolute right-3 top-10 text-gray-600 cursor-pointer"
+            <button
+              type="button"
+              className="absolute right-3 top-10 text-gray-600"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
-            </span>
+            </button>
             {formik.touched.password && formik.errors.password && (
               <div className="text-red-500 text-sm mt-1">{formik.errors.password}</div>
             )}
@@ -94,6 +97,7 @@ const SignIn = () => {
               id="rememberMe"
               {...formik.getFieldProps('rememberMe')}
               className="mr-2"
+              aria-label="Remember me"
             />
             <label htmlFor="rememberMe" className="text-sm">Remember Me</label>
           </div>
@@ -106,7 +110,7 @@ const SignIn = () => {
             aria-label={formik.isSubmitting ? 'Signing in' : 'Sign In'}
           >
             {formik.isSubmitting ? (
-              <Loader height="25" width="25" aria-label="Loading..." />
+              <Loader height="25" width="25" className="mr-2" aria-label="Loading..." />
             ) : (
               'Sign In'
             )}

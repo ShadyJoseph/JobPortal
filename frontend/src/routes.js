@@ -9,7 +9,7 @@ import SignUp from './pages/SignUp';
 import Jobs from './pages/Jobs';
 import UserProfile from './pages/UserProfile';
 import CreateJob from './pages/CreateJob';
-
+import JobDetails from './pages/JobDetails';
 const AppRoutes = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
@@ -23,6 +23,7 @@ const AppRoutes = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/jobs" element={<Jobs />} />
+            <Route path="/jobs/:jobId" element={<JobDetails />} />
 
             {/* Restricted routes for authenticated users only */}
             <Route path="/profile" element={isAuthenticated ? <UserProfile /> : <Navigate to="/signin" />} />

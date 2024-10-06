@@ -1,4 +1,3 @@
-// pages/HomePage.js
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaBriefcase, FaBullhorn, FaPalette, FaChartLine, FaEllipsisH } from 'react-icons/fa';
@@ -10,7 +9,8 @@ const HomePage = () => {
     { name: 'Design', icon: <FaPalette className="text-gray-900 text-4xl" /> },
     { name: 'Sales', icon: <FaChartLine className="text-gray-900 text-4xl" /> },
     { name: 'Other', icon: <FaEllipsisH className="text-gray-900 text-4xl" /> },
-  ]; 
+  ];
+
   const navigate = useNavigate();
 
   const handleCategoryClick = (categoryName) => {
@@ -26,7 +26,7 @@ const HomePage = () => {
           Your one-stop destination for finding the best job opportunities. Browse through various job categories and take the next step in your career!
         </p>
         <Link to="/signin">
-          <button className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-200 transform hover:scale-105">
+          <button className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-200 transform hover:scale-105 focus:ring-4 focus:ring-blue-300">
             Get Started
           </button>
         </Link>
@@ -34,15 +34,19 @@ const HomePage = () => {
 
       {/* Job Categories Section */}
       <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Explore Job Categories</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
         {categories.map((category, index) => (
-          <div key={index} className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-200 flex flex-col items-center text-center">
+          <div
+            key={index}
+            className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300 flex flex-col items-center text-center"
+          >
             {category.icon}
             <h3 className="text-2xl font-bold mb-4 text-blue-600">{category.name}</h3>
             <p className="text-gray-700">Discover opportunities in {category.name.toLowerCase()}.</p>
-            <button 
-              className="mt-6 text-blue-600 hover:underline transition-all duration-200 transform hover:scale-105" 
+            <button
+              className="mt-6 text-blue-600 hover:underline transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-blue-400"
               onClick={() => handleCategoryClick(category.name)} // Navigate with category
+              aria-label={`View ${category.name} jobs`}
             >
               View Jobs
             </button>

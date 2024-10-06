@@ -1,8 +1,8 @@
-// pages/JobsPage.js
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import api from '../utils/api';
 import Loader from '../components/Loader';
+import { debounce } from 'lodash'; // Import debounce for better search performance
 
 const JobsPage = () => {
   const [jobs, setJobs] = useState([]);
@@ -13,13 +13,18 @@ const JobsPage = () => {
 
   const location = useLocation(); // Get the current location object
 
+  // Debounced search handler to improve performance
+  const handleSearchChange = debounce((term) => {
+    setSearchTerm(term);
+  }, 300);
+
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         const response = await api.get('/jobs');
         setJobs(response.data.jobs);
       } catch (error) {
-        setError('Failed to fetch jobs');
+        setError('Failed to fetch jobs. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -60,15 +65,16 @@ const JobsPage = () => {
         <input
           type="text"
           placeholder="Search by job title..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => handleSearchChange(e.target.value)} // Using debounce for better UX
           className="w-full md:w-1/2 p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all shadow-sm"
+          aria-label="Search for jobs by title"
         />
 
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
           className="w-full md:w-1/3 p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all shadow-sm"
+          aria-label="Select job category"
         >
           {categories.map((category) => (
             <option key={category} value={category}>
@@ -84,8 +90,14 @@ const JobsPage = () => {
           <Loader height="80" width="80" color="#3498db" />
         </div>
       )}
-      {error && <p className="text-red-500 text-center">{error}</p>}
-      {filteredJobs.length === 0 && !loading && (
+
+      {error && (
+        <p className="text-red-500 text-center mb-4">
+          {error} <button onClick={() => window.location.reload()} className="underline text-blue-600">Retry</button>
+        </p>
+      )}
+
+      {filteredJobs.length === 0 && !loading && !error && (
         <p className="text-gray-500 text-center">No jobs found. Please try a different search term or category.</p>
       )}
 
@@ -93,7 +105,7 @@ const JobsPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredJobs.map((job) => (
           <div
-            key={job._id}
+            key={job._id} // Make sure to use job._id
             className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transform transition-transform duration-300 hover:scale-105 hover:shadow-xl"
           >
             <h2 className="text-2xl font-bold text-blue-600 mb-2">{job.title}</h2>
@@ -101,8 +113,9 @@ const JobsPage = () => {
             <p className="text-gray-500">{job.location}</p>
             <p className="text-gray-600 mt-4">{job.description}</p>
             <Link
-              to={`/jobs/${job._id}`}
+              to={`/jobs/${job._id}`} // Make sure to use job._id here
               className="inline-block bg-blue-500 text-white mt-4 py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-300"
+              aria-label={`View details for ${job.title}`}
             >
               View Details
             </Link>

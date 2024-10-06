@@ -7,6 +7,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Loader from '../components/Loader';
 
+// Reusable Input Field Component
 const InputField = ({ id, label, type, formik, showToggle, toggleVisibility }) => (
   <div className="mb-4 relative">
     <label className="block text-sm font-medium mb-1" htmlFor={id}>
@@ -15,6 +16,7 @@ const InputField = ({ id, label, type, formik, showToggle, toggleVisibility }) =
     <input
       type={showToggle ? 'text' : type}
       id={id}
+      aria-describedby={`${id}-error`}
       {...formik.getFieldProps(id)}
       className={`w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
         formik.touched[id] && formik.errors[id] ? 'border-red-500' : ''
@@ -30,7 +32,9 @@ const InputField = ({ id, label, type, formik, showToggle, toggleVisibility }) =
       </span>
     )}
     {formik.touched[id] && formik.errors[id] && (
-      <div className="text-red-500 text-sm">{formik.errors[id]}</div>
+      <div id={`${id}-error`} className="text-red-500 text-sm mt-1">
+        {formik.errors[id]}
+      </div>
     )}
   </div>
 );
@@ -42,20 +46,23 @@ const SignUp = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [submitError, setSubmitError] = useState(''); // State for submission errors
 
+  // Password Strength Checker
   const getPasswordStrength = (password) => {
     const strengthConditions = [
-      password.length >= 6,
-      /[a-zA-Z]/.test(password),
+      password.length >= 8,
+      /[a-z]/.test(password),
+      /[A-Z]/.test(password),
       /\d/.test(password),
       /[@$!%*?&]/.test(password),
     ];
     const metConditions = strengthConditions.filter(Boolean).length;
 
-    if (metConditions <= 1) return 'Weak';
-    if (metConditions === 2) return 'Moderate';
+    if (metConditions <= 2) return 'Weak';
+    if (metConditions === 3) return 'Moderate';
     return 'Strong';
   };
 
+  // Formik Form Validation and Submission
   const formik = useFormik({
     initialValues: {
       firstName: '',
@@ -86,9 +93,8 @@ const SignUp = () => {
         await dispatch(signup(values)).unwrap();
         navigate('/');
       } catch (err) {
-        // Extract the error message from error.response.data if available
         const message = err.response?.data || 'An unexpected error occurred';
-        setSubmitError(message); // Set the error message to be displayed
+        setSubmitError(message);
       } finally {
         setSubmitting(false);
       }
@@ -103,29 +109,15 @@ const SignUp = () => {
         {submitError && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
             <strong className="font-bold">Error: </strong>
-            <span className="block sm:inline">{submitError}</span> {/* Display the submit error */}
+            <span className="block sm:inline">{submitError}</span>
           </div>
         )}
 
         <form onSubmit={formik.handleSubmit}>
-          <InputField
-            id="firstName"
-            label="First Name"
-            type="text"
-            formik={formik}
-          />
-          <InputField
-            id="lastName"
-            label="Last Name"
-            type="text"
-            formik={formik}
-          />
-          <InputField
-            id="email"
-            label="Email"
-            type="email"
-            formik={formik}
-          />
+          <InputField id="firstName" label="First Name" type="text" formik={formik} />
+          <InputField id="lastName" label="Last Name" type="text" formik={formik} />
+          <InputField id="email" label="Email" type="email" formik={formik} />
+          
           <InputField
             id="password"
             label="Password"
@@ -145,6 +137,7 @@ const SignUp = () => {
           >
             Password Strength: {getPasswordStrength(formik.values.password)}
           </p>
+          
           <InputField
             id="confirmPassword"
             label="Confirm Password"
@@ -153,6 +146,7 @@ const SignUp = () => {
             showToggle={showConfirmPassword}
             toggleVisibility={() => setShowConfirmPassword(!showConfirmPassword)}
           />
+          
           <button
             type="submit"
             className={`w-full p-2 rounded transition duration-200 flex items-center justify-center ${
@@ -162,11 +156,7 @@ const SignUp = () => {
             }`}
             disabled={formik.isSubmitting}
           >
-            {formik.isSubmitting ? (
-              <Loader height="25" width="25" />
-            ) : (
-              'Sign Up'
-            )}
+            {formik.isSubmitting ? <Loader height="25" width="25" /> : 'Sign Up'}
           </button>
         </form>
 
