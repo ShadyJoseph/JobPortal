@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { MdHome, MdWork, MdPerson, MdPostAdd, MdLogin, MdPersonAdd, MdLogout } from 'react-icons/md'; // Importing React Icons
+import { MdHome, MdWork, MdPerson, MdPostAdd, MdLogin, MdPersonAdd, MdLogout } from 'react-icons/md';
 import Logo from '../assets/Logo.jpg';
 import { logout } from '../store/actions/authActions';
+import LogoutConfirmation from './LogoutConfirmation';
 
 const Header = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
+  
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = () => {
-    dispatch(logout());
+    setIsLoading(true);
+    dispatch(logout()); // Dispatch the logout action
+    setTimeout(() => {
+      setIsLoading(false);
+      setShowLogoutConfirm(false); // Close the modal once logout is completed
+    }, 2000); // Simulate the logging out process (you can handle the actual loader based on the API call status)
   };
 
   return (
@@ -61,7 +70,7 @@ const Header = () => {
                 <span>{user?.firstName}'s Profile</span>
               </NavLink>
               <button
-                onClick={handleLogout}
+                onClick={() => setShowLogoutConfirm(true)}
                 className="text-white hover:text-gray-300 transition duration-200 focus:outline-none font-semibold flex items-center space-x-2"
               >
                 <MdLogout className="h-5 w-5" />
@@ -103,6 +112,15 @@ const Header = () => {
           )}
         </nav>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <LogoutConfirmation
+          onConfirm={handleLogout}
+          onCancel={() => setShowLogoutConfirm(false)}
+          isLoading={isLoading}
+        />
+      )}
     </header>
   );
 };
