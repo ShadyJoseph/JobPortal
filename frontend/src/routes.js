@@ -7,7 +7,6 @@ import AboutPage from './pages/About';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Jobs from './pages/Jobs';
-import JobDetailsPage from './pages/JobsDetails';
 import UserProfile from './pages/UserProfile';
 import CreateJob from './pages/CreateJob';
 
@@ -16,7 +15,7 @@ const AppRoutes = () => {
 
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen bg-gray-100">
         <Header />
         <main className="flex-grow pt-16">
           <Routes>
@@ -24,7 +23,6 @@ const AppRoutes = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/jobs" element={<Jobs />} />
-            <Route path="/jobs/:id" element={<JobDetailsPage />} />
 
             {/* Restricted routes for authenticated users only */}
             <Route path="/profile" element={isAuthenticated ? <UserProfile /> : <Navigate to="/signin" />} />
