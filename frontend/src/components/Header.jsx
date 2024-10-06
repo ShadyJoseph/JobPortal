@@ -1,26 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { MdHome, MdWork, MdPerson, MdPostAdd, MdLogin, MdPersonAdd, MdLogout } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 import Logo from '../assets/Logo.jpg';
 import { logout } from '../store/actions/authActions';
+import { resetLogoutSuccess } from '../store/reducers/authReducer';
 import LogoutConfirmation from './LogoutConfirmation';
 
 const Header = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
-  
+  const { isAuthenticated, user, logoutSuccess } = useSelector((state) => state.auth);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    setIsLoading(true);
+    setIsLoading(true); // Start loader
     dispatch(logout()); // Dispatch the logout action
-    setTimeout(() => {
-      setIsLoading(false);
-      setShowLogoutConfirm(false); // Close the modal once logout is completed
-    }, 2000); // Simulate the logging out process (you can handle the actual loader based on the API call status)
   };
+
+  useEffect(() => {
+    if (logoutSuccess) {
+      setIsLoading(false); // Stop loader when logout is complete
+      setShowLogoutConfirm(false); // Close the modal
+      dispatch(resetLogoutSuccess()); // Reset logout success flag
+      navigate('/signin'); // Redirect to the sign-in page after logout
+    }
+  }, [logoutSuccess, dispatch, navigate]);
 
   return (
     <header className="bg-gray-900 fixed top-0 left-0 right-0 z-10 p-4 shadow-lg">

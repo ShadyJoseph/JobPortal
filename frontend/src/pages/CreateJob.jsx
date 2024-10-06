@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; 
+import api from '../utils/api'; 
 import Loader from '../components/Loader';
 
 const CreateJob = () => {
@@ -12,7 +14,9 @@ const CreateJob = () => {
     status: 'open',
   });
 
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,19 +28,34 @@ const CreateJob = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Start loading when form is submitted
+    setLoading(true);
+    setError(null);
 
-    // Simulate a delay for the job creation process (replace with actual API call)
-    setTimeout(() => {
-      console.log('Job created:', formData);
-      setLoading(false); // Stop loading after form is submitted
-    }, 2000); // Simulate a 2-second delay
+    try {
+      const response = await api.post('/jobs', formData);
+      if (response.status === 201) {
+        console.log('Job created:', response.data);
+        navigate('/jobs');
+      }
+    } catch (error) {
+      console.error('Error creating job:', error.response?.data || error.message);
+      setError(error.response?.data?.message || 'An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">Create a New Job</h1>
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div className="container mx-auto p-6 max-w-xl">
+      <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Create a New Job</h1>
+
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-8 mb-4">
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
             Job Title
@@ -48,7 +67,8 @@ const CreateJob = () => {
             value={formData.title}
             onChange={handleChange}
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow-md appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+            placeholder="Enter job title"
           />
         </div>
 
@@ -63,7 +83,8 @@ const CreateJob = () => {
             value={formData.company}
             onChange={handleChange}
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow-md appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+            placeholder="Enter company name"
           />
         </div>
 
@@ -78,7 +99,8 @@ const CreateJob = () => {
             value={formData.location}
             onChange={handleChange}
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow-md appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+            placeholder="Enter job location"
           />
         </div>
 
@@ -92,8 +114,9 @@ const CreateJob = () => {
             value={formData.description}
             onChange={handleChange}
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          ></textarea>
+            className="shadow-md appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+            placeholder="Enter job description"
+          />
         </div>
 
         <div className="mb-4">
@@ -107,7 +130,8 @@ const CreateJob = () => {
             value={formData.salary}
             onChange={handleChange}
             min="0"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow-md appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+            placeholder="Enter salary (optional)"
           />
         </div>
 
@@ -121,7 +145,7 @@ const CreateJob = () => {
             value={formData.category}
             onChange={handleChange}
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow-md appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
           >
             <option value="Engineering">Engineering</option>
             <option value="Marketing">Marketing</option>
@@ -141,7 +165,7 @@ const CreateJob = () => {
             value={formData.status}
             onChange={handleChange}
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow-md appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
           >
             <option value="open">Open</option>
             <option value="closed">Closed</option>
@@ -151,10 +175,10 @@ const CreateJob = () => {
         <div className="flex items-center justify-between">
           <button
             type="submit"
-            disabled={loading} // Disable button while loading
-            className={`font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+            disabled={loading}
+            className={`font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out ${
               loading
-                ? 'bg-gray-400 cursor-not-allowed' // Greyed out button when loading
+                ? 'bg-gray-400 cursor-not-allowed'
                 : 'bg-blue-500 hover:bg-blue-700 text-white'
             }`}
           >
