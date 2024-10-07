@@ -2,18 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5" />
     <meta name="theme-color" content="#4A5568" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Job Portal Team" />
     <meta
       name="description"
       content="Find your dream job or post job listings easily with our Job Portal. A platform connecting employers and job seekers."
     />
 
-    <!-- Open Graph meta tags -->
+    <!-- Open Graph meta tags for Social Media sharing -->
     <meta property="og:title" content="Job Portal - Your Gateway to Employment" />
     <meta property="og:description" content="Find your dream job or post job listings easily with our Job Portal." />
     <meta property="og:image" content="%PUBLIC_URL%/assets/Logo.jpg" />
-    <meta property="og:url" content="https://yourjobportal.com" />
+    <meta property="og:url" content="https://jobportal.com" />
     <meta property="og:type" content="website" />
 
     <!-- Twitter Card meta tags -->
@@ -22,10 +25,35 @@
     <meta name="twitter:description" content="Find your dream job or post job listings easily with our Job Portal." />
     <meta name="twitter:image" content="%PUBLIC_URL%/assets/Logo.jpg" />
 
-    <title>Job Portal</title>
+    <!-- Favicon for better branding -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+    <!-- Preconnect to enhance performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="%PUBLIC_URL%/styles.css" />
+
+    <!-- Title for SEO and branding -->
+    <title>Job Portal - Find Your Dream Job</title>
+
+    <!-- Favicons for various platforms -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" sizes="16x16 32x32" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
   </head>
+
   <body>
     <div id="root"></div>
+
+    <!-- Performance optimizations: Load scripts at the end of the body for better loading -->
+    <script src="%PUBLIC_URL%/main.js" defer></script>
   </body>
 </html>
