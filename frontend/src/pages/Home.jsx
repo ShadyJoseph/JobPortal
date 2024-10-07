@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { FaBriefcase, FaBullhorn, FaPalette, FaChartLine, FaEllipsisH } from 'react-icons/fa';
+import { useSelector } from 'react-redux'; // Import useSelector to access auth state
 
 const HomePage = () => {
   const categories = [
@@ -12,9 +13,18 @@ const HomePage = () => {
   ];
 
   const navigate = useNavigate();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); // Get authentication status
 
   const handleCategoryClick = (categoryName) => {
     navigate(`/jobs?category=${categoryName}`); // Pass category as URL param
+  };
+
+  const handleGetStartedClick = () => {
+    if (isAuthenticated) {
+      navigate('/jobs'); // Redirect to jobs page if logged in
+    } else {
+      navigate('/signin'); // Redirect to sign-in page if not logged in
+    }
   };
 
   return (
@@ -25,11 +35,12 @@ const HomePage = () => {
         <p className="text-lg mb-8 relative">
           Your one-stop destination for finding the best job opportunities. Browse through various job categories and take the next step in your career!
         </p>
-        <Link to="/signin">
-          <button className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-200 transform hover:scale-105 focus:ring-4 focus:ring-blue-300">
-            Get Started
-          </button>
-        </Link>
+        <button
+          onClick={handleGetStartedClick}
+          className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-200 transform hover:scale-105 focus:ring-4 focus:ring-blue-300"
+        >
+          Get Started
+        </button>
       </div>
 
       {/* Job Categories Section */}

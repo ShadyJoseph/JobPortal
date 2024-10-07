@@ -12,12 +12,23 @@ const JobDetails = () => {
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
+        console.log('Fetching job details for job ID:', jobId); // Log the job ID being fetched
+
         const response = await api.get(`/jobs/${jobId}`); // Fetch job details by jobId
-        setJob(response.data.job); // Ensure this is correct based on your API response
+        console.log('Response from API:', response); // Log the full API response
+
+        // Accessing the job data correctly based on the API response structure
+        if (response.data) {
+          setJob(response.data); // Set the job state directly with the fetched job data
+          console.log('Job details set in state:', response.data); // Log the job details set in state
+        } else {
+          throw new Error('Job data is not in the expected format'); // Handle unexpected format
+        }
       } catch (error) {
+        console.error('Error fetching job details:', error); // Log any errors
         setError('Failed to fetch job details. Please try again.');
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading to false regardless of outcome
       }
     };
 
@@ -53,15 +64,19 @@ const JobDetails = () => {
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Job Description</h2>
         <p className="text-gray-600 mb-4">{job.description}</p>
         
-        <h3 className="text-xl font-semibold text-gray-800 mb-4">Requirements</h3>
-        <ul className="list-disc list-inside text-gray-600 mb-4">
-          {job.requirements.map((req, index) => (
-            <li key={index}>{req}</li>
-          ))}
-        </ul>
+        {job.requirements && (
+          <>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Requirements</h3>
+            <ul className="list-disc list-inside text-gray-600 mb-4">
+              {job.requirements.map((req, index) => (
+                <li key={index}>{req}</li>
+              ))}
+            </ul>
+          </>
+        )}
 
         <h3 className="text-xl font-semibold text-gray-800 mb-4">Salary</h3>
-        <p className="text-gray-600">{job.salary}</p>
+        <p className="text-gray-600">${job.salary}</p>
 
         <Link
           to="/jobs"

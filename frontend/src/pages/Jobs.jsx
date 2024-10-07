@@ -55,13 +55,13 @@ const JobsPage = () => {
 
   return (
     <div className="container mx-auto p-6 min-h-screen">
-      <h1 className="text-5xl font-extrabold mb-8 text-center text-gray-800">Explore Job Opportunities</h1>
-      <p className="text-lg mb-12 text-center text-gray-500">
+      <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-center text-gray-800">Explore Job Opportunities</h1>
+      <p className="text-lg mb-10 text-center text-gray-500">
         Find the right opportunity for you. Filter by title or category.
       </p>
 
       {/* Search Input and Category Dropdown */}
-      <div className="flex flex-col md:flex-row justify-between items-center mb-10 space-y-4 md:space-y-0">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
         <input
           type="text"
           placeholder="Search by job title..."
@@ -102,20 +102,19 @@ const JobsPage = () => {
       )}
 
       {/* Job Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {filteredJobs.map((job) => (
           <div
-            key={job._id} // Make sure to use job._id
+            key={job._id?.$oid || job._id} // Check for $oid or fallback to _id
             className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transform transition-transform duration-300 hover:scale-105 hover:shadow-xl"
           >
-            <h2 className="text-2xl font-bold text-blue-600 mb-2">{job.title}</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-blue-600 mb-2">{job.title}</h2>
             <p className="text-gray-700 font-medium">{job.company}</p>
             <p className="text-gray-500">{job.location}</p>
             <p className="text-gray-600 mt-4">{job.description}</p>
             <Link
-              to={`/jobs/${job._id}`} // Make sure to use job._id here
-              className="inline-block bg-blue-500 text-white mt-4 py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-300"
-              aria-label={`View details for ${job.title}`}
+              to={`/jobs/${job._id?.$oid || job._id}`} // Check for $oid or fallback to _id
+              className="inline-block mt-6 bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-300"
             >
               View Details
             </Link>

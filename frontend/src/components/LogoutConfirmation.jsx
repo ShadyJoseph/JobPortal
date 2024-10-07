@@ -1,6 +1,5 @@
-// LogoutConfirmation.js
 import React from 'react';
-import Loader from './Loader'; // Import the Loader component
+import Loader from './Loader'; 
 
 const LogoutConfirmation = ({ onConfirm, onCancel, isLoading }) => {
   return (
