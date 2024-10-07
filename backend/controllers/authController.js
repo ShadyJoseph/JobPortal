@@ -42,7 +42,7 @@ exports.signup = async (req, res, next) => {
         sendTokenResponse(user, HTTP_STATUS.CREATED, res); // Send token upon successful signup
     } catch (error) {
         logger.error(`Signup error for ${email}: ${error.message}`, { stack: error.stack });
-        next(error); // Pass error to global error handler
+        return next(error); // Pass error to global error handler
     }
 };
 
@@ -81,7 +81,7 @@ exports.signin = async (req, res, next) => {
         sendTokenResponse(user, HTTP_STATUS.OK, res); // Send token upon successful signin
     } catch (error) {
         logger.error(`Signin error for ${email}: ${error.message}`, { stack: error.stack });
-        next(error);
+        return next(error);
     }
 };
 
@@ -154,7 +154,6 @@ exports.userProfile = async (req, res, next) => {
         });
     } catch (error) {
         logger.error(`Error fetching user profile for ${req.user.id}: ${error.message}`, { stack: error.stack });
-        next(error);
+        return next(error);
     }
 };
-
