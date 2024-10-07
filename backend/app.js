@@ -25,8 +25,8 @@ connectDB();
 app.use(morgan("dev")); // Logging middleware
 app.use(helmet()); // Security headers
 const allowedOrigins = [
-  'https://job-portal-delta-neon.vercel.app', 
-  'https://job-portal-78fa6woho-shady-josephs-projects.vercel.app',
+  'https://job-portal-delta-lime.vercel.app/', 
+  'https://job-portal-git-main-shady-josephs-projects.vercel.app/',
   'http://localhost:3000'
 ];
 
@@ -38,8 +38,11 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,  // Allow credentials such as cookies
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Allow specific headers
 }));
+
 
 
 
