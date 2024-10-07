@@ -24,9 +24,11 @@ connectDB();
 // Middleware setup
 app.use(morgan("dev")); // Logging middleware
 app.use(helmet()); // Security headers
+
 const allowedOrigins = [
-  'https://job-portal-delta-lime.vercel.app/', 
-  'https://job-portal-git-main-shady-josephs-projects.vercel.app/',
+  'https://job-portal-delta-lime.vercel.app', 
+  'https://job-portal-git-main-shady-josephs-projects.vercel.app',
+  'https://job-portal-hwxjip0co-shady-josephs-projects.vercel.app',
   'http://localhost:3000'
 ];
 
@@ -38,13 +40,10 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true,  // Allow credentials such as cookies
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'],  // Allow specific headers
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-
-
-
 
 app.use(bodyParser.json({ limit: "5mb" })); // Body parser for JSON
 app.use(bodyParser.urlencoded({ extended: true })); // Body parser for URL-encoded data
