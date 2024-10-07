@@ -42,6 +42,7 @@ app.use(cors({
 }));
 
 
+
 app.use(bodyParser.json({ limit: "5mb" })); // Body parser for JSON
 app.use(bodyParser.urlencoded({ extended: true })); // Body parser for URL-encoded data
 app.use(cookieParser()); // Cookie parser
