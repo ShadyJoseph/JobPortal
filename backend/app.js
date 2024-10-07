@@ -25,8 +25,8 @@ connectDB();
 app.use(morgan("dev")); // Logging middleware
 app.use(helmet()); // Security headers
 app.use(cors({ 
-  origin: 'http://localhost:3000', // Allow requests from your frontend
-  credentials: true, // Allow credentials (cookies, headers)
+  origin: 'https://job-portal-delta-neon.vercel.app/',
+  credentials: true, 
 })); 
 app.use(bodyParser.json({ limit: "5mb" })); // Body parser for JSON
 app.use(bodyParser.urlencoded({ extended: true })); // Body parser for URL-encoded data
