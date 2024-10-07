@@ -28,7 +28,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 mt-2">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-lg p-12 mb-16 text-center transition-transform duration-200 relative overflow-hidden">
         <h1 className="text-5xl font-extrabold mb-6 relative">Welcome to the Job Portal</h1>

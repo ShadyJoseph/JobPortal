@@ -109,18 +109,21 @@ exports.updateJob = async (req, res, next) => {
 // Delete Job (Admin only)
 exports.deleteJob = async (req, res, next) => {
   try {
+    // Check user role for admin access
     if (req.user.role !== 1) {
       return next(new ErrorResponse('Access denied. Only admins can delete jobs.', 403));
     }
 
-    const job = await Job.findById(req.params.id);
+    // Find and delete the job
+    const job = await Job.findByIdAndDelete(req.params.id); // Use findByIdAndDelete
+
     if (!job) {
       return next(new ErrorResponse('Job not found', 404));
     }
 
-    await job.remove();
     return res.status(200).json({ message: 'Job deleted successfully' });
   } catch (error) {
-    next(error); // Pass error to global error handler
+    // Pass error to global error handler
+    next(error);
   }
 };

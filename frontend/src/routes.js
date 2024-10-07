@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Loader from './components/Loader'; // Assuming you have a Loader component
+import Loader from './components/Loader'; 
 
 const HomePage = lazy(() => import('./pages/Home'));
 const AboutPage = lazy(() => import('./pages/About'));
@@ -13,7 +13,8 @@ const SignIn = lazy(() => import('./pages/SignIn'));
 const SignUp = lazy(() => import('./pages/SignUp'));
 const UserProfile = lazy(() => import('./pages/UserProfile'));
 const CreateJob = lazy(() => import('./pages/CreateJob'));
-const NotFoundPage = lazy(() => import('./pages/NotFound')); // Assuming you have a NotFound page
+const NotFoundPage = lazy(() => import('./pages/NotFound'));
+const EditJob=lazy(()=>import('./pages/EditJob'))
 
 // PrivateRoute component to handle protected routes
 const PrivateRoute = ({ children }) => {
@@ -38,6 +39,7 @@ const AppRoutes = () => {
               {/* Protected routes */}
               <Route path="/profile" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
               <Route path="/post-job" element={<PrivateRoute><CreateJob /></PrivateRoute>} />
+              <Route path="/jobs/:jobId/edit" element={<PrivateRoute><EditJob /></PrivateRoute>} />
 
               {/* Authentication routes */}
               <Route path="/signin" element={<SignIn />} />

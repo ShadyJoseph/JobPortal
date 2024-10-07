@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../utils/api'; // Adjust the import path as needed
 import Loader from '../components/Loader';
 
 const JobDetails = () => {
   const { jobId } = useParams(); // Get the job ID from the URL
+  const navigate = useNavigate(); // Use useNavigate instead of useHistory
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -29,11 +30,28 @@ const JobDetails = () => {
         setError('Failed to fetch job details. Please try again.');
       } finally {
         setLoading(false); // Set loading to false regardless of outcome
+        console.log('Loading state set to false'); // Log loading state change
       }
     };
 
     fetchJobDetails();
   }, [jobId]);
+
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this job?')) {
+      try {
+        console.log('Deleting job with ID:', jobId); // Log the job ID being deleted
+        const response = await api.delete(`/jobs/${jobId}`);
+        console.log('Response from delete API:', response); // Log the response
+        navigate('/jobs'); // Redirect to jobs list after deletion
+      } catch (error) {
+        console.error('Error deleting job:', error.response?.data || error.message);
+        setError('Failed to delete job. Please try again.');
+      }
+    } else {
+      console.log('Job deletion cancelled'); // Log cancellation of deletion
+    }
+  };
 
   if (loading) {
     return (
@@ -77,6 +95,21 @@ const JobDetails = () => {
 
         <h3 className="text-xl font-semibold text-gray-800 mb-4">Salary</h3>
         <p className="text-gray-600">${job.salary}</p>
+
+        <div className="mt-6 flex justify-between">
+          <Link
+            to={`/jobs/${job._id}/edit`}
+            className="inline-block bg-yellow-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-yellow-600 transition-colors duration-300"
+          >
+            Edit Job
+          </Link>
+          <button
+            onClick={handleDelete}
+            className="inline-block bg-red-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-600 transition-colors duration-300"
+          >
+            Delete Job
+          </button>
+        </div>
 
         <Link
           to="/jobs"
