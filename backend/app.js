@@ -24,10 +24,19 @@ connectDB();
 // Middleware setup
 app.use(morgan("dev")); // Logging middleware
 app.use(helmet()); // Security headers
-app.use(cors({ 
-  origin: 'https://job-portal-delta-neon.vercel.app/',
-  credentials: true, 
-})); 
+const allowedOrigins = ['https://job-portal-delta-neon.vercel.app', 'https://job-portal-78fa6woho-shady-josephs-projects.vercel.app'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 app.use(bodyParser.json({ limit: "5mb" })); // Body parser for JSON
 app.use(bodyParser.urlencoded({ extended: true })); // Body parser for URL-encoded data
 app.use(cookieParser()); // Cookie parser
