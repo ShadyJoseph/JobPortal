@@ -1,7 +1,7 @@
 import React from 'react';
 import {  useNavigate } from 'react-router-dom';
 import { FaBriefcase, FaBullhorn, FaPalette, FaChartLine, FaEllipsisH } from 'react-icons/fa';
-import { useSelector } from 'react-redux'; // Import useSelector to access auth state
+import { useSelector } from 'react-redux'; 
 
 const HomePage = () => {
   const categories = [

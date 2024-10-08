@@ -1,5 +1,5 @@
 import React from 'react';
-import Loader from './Loader'; // Assuming Loader is already implemented
+import Loader from './Loader'; 
 
 const ConfirmationModal = ({ message, onConfirm, onCancel, isLoading }) => {
   return (

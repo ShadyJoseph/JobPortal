@@ -7,6 +7,7 @@ import Logo from '../assets/Logo.jpg';
 import { logout } from '../store/actions/authActions';
 import { resetLogoutSuccess } from '../store/reducers/authReducer';
 import ConfirmationModal from './ConfirmationModal';
+
 const Header = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, user, logoutSuccess } = useSelector((state) => state.auth);
@@ -28,6 +29,11 @@ const Header = () => {
       navigate('/signin'); // Redirect to the sign-in page after logout
     }
   }, [logoutSuccess, dispatch, navigate]);
+
+  // Function to handle closing the menu
+  const handleMenuClose = () => {
+    setMenuOpen(false);
+  };
 
   return (
     <header className="bg-gray-900 fixed top-0 left-0 right-0 z-10 p-4 shadow-lg">
@@ -56,6 +62,7 @@ const Header = () => {
           <div className="flex flex-col md:flex-row">
             <NavLink
               to="/"
+              onClick={handleMenuClose} // Close the menu on click
               className={({ isActive }) =>
                 isActive ? 'text-blue-400 font-semibold flex items-center space-x-2 p-4' : 'text-white hover:text-gray-300 transition duration-200 flex items-center space-x-2 p-4'
               }
@@ -65,6 +72,7 @@ const Header = () => {
             </NavLink>
             <NavLink
               to="/jobs"
+              onClick={handleMenuClose} // Close the menu on click
               className={({ isActive }) =>
                 isActive ? 'text-blue-400 font-semibold flex items-center space-x-2 p-4' : 'text-white hover:text-gray-300 transition duration-200 flex items-center space-x-2 p-4'
               }
@@ -77,6 +85,7 @@ const Header = () => {
               <>
                 <NavLink
                   to="/profile"
+                  onClick={handleMenuClose} // Close the menu on click
                   className={({ isActive }) =>
                     isActive ? 'text-blue-400 font-semibold flex items-center space-x-2 p-4' : 'text-white hover:text-gray-300 transition duration-200 flex items-center space-x-2 p-4'
                   }
@@ -94,6 +103,7 @@ const Header = () => {
                 {user?.role === 1 && (
                   <NavLink
                     to="/post-job"
+                    onClick={handleMenuClose} // Close the menu on click
                     className={({ isActive }) =>
                       isActive ? 'text-blue-400 font-semibold flex items-center space-x-2 p-4' : 'text-white hover:text-gray-300 transition duration-200 flex items-center space-x-2 p-4'
                     }
@@ -107,6 +117,7 @@ const Header = () => {
               <>
                 <NavLink
                   to="/signin"
+                  onClick={handleMenuClose} // Close the menu on click
                   className={({ isActive }) =>
                     isActive ? 'text-blue-400 font-semibold flex items-center space-x-2 p-4' : 'text-white hover:text-gray-300 transition duration-200 flex items-center space-x-2 p-4'
                   }
@@ -116,6 +127,7 @@ const Header = () => {
                 </NavLink>
                 <NavLink
                   to="/register"
+                  onClick={handleMenuClose} // Close the menu on click
                   className={({ isActive }) =>
                     isActive ? 'text-blue-400 font-semibold flex items-center space-x-2 p-4' : 'text-white hover:text-gray-300 transition duration-200 flex items-center space-x-2 p-4'
                   }
@@ -131,12 +143,12 @@ const Header = () => {
 
       {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (
-     <ConfirmationModal
-     message="Are you sure you want to logout?"
-     onConfirm={handleLogout}
-     onCancel={() => setShowLogoutConfirm(false)}
-     isLoading={isLoading} // Pass loading state to modal
-   />
+        <ConfirmationModal
+          message="Are you sure you want to logout?"
+          onConfirm={handleLogout}
+          onCancel={() => setShowLogoutConfirm(false)}
+          isLoading={isLoading} // Pass loading state to modal
+        />
       )}
     </header>
   );
