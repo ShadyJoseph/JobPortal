@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import api from '../utils/api'; // Adjust the import path as needed
+import { useSelector } from 'react-redux'; // Use Redux to get auth state
+import api from '../utils/api';
 import Loader from '../components/Loader';
-import ConfirmationModal from '../components/ConfirmationModal'; // Import the new modal
+import ConfirmationModal from '../components/ConfirmationModal'; // Import the modal
 
 const JobDetails = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
+  
+  // Get user and authentication status from Redux store
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -69,21 +74,21 @@ const JobDetails = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 mt-10 min-h-screen">
-      <h1 className="text-5xl font-extrabold text-center text-gray-800 mb-6">
+    <div className="container mx-auto p-4 sm:p-6 lg:p-10 mt-10 min-h-screen">
+      <h1 className="text-4xl sm:text-5xl font-extrabold text-center text-gray-800 mb-6">
         {job.title}
       </h1>
-      <p className="text-xl text-center text-gray-500 mb-6">
+      <p className="text-lg sm:text-xl text-center text-gray-500 mb-6">
         {job.company} - {job.location}
       </p>
 
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Job Description</h2>
+      <div className="bg-white p-4 sm:p-8 rounded-lg shadow-lg">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Job Description</h2>
         <p className="text-gray-600 mb-4">{job.description}</p>
 
         {job.requirements && job.requirements.length > 0 && (
           <>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Requirements</h3>
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">Requirements</h3>
             <ul className="list-disc list-inside text-gray-600 mb-4">
               {job.requirements.map((req, index) => (
                 <li key={index}>{req}</li>
@@ -92,23 +97,26 @@ const JobDetails = () => {
           </>
         )}
 
-        <h3 className="text-xl font-semibold text-gray-800 mb-4">Salary</h3>
+        <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">Salary</h3>
         <p className="text-gray-600 mb-6">${job.salary}</p>
 
-        <div className="flex flex-col md:flex-row justify-between mt-6 space-y-4 md:space-y-0 md:space-x-4">
-          <Link
-            to={`/jobs/${job._id}/edit`}
-            className="bg-yellow-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-yellow-600 transition duration-300"
-          >
-            Edit Job
-          </Link>
-          <button
-            onClick={() => setShowModal(true)} // Trigger modal when delete is clicked
-            className="bg-red-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-600 transition duration-300"
-          >
-            Delete Job
-          </button>
-        </div>
+        {/* Only show edit and delete buttons if the user is authenticated and is an admin */}
+        {isAuthenticated && user?.role === 1 && (
+          <div className="flex flex-col mt-6 space-y-4">
+            <Link
+              to={`/jobs/${job._id}/edit`}
+              className="bg-yellow-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 text-center"
+            >
+              Edit Job
+            </Link>
+            <button
+              onClick={() => setShowModal(true)} // Trigger modal when delete is clicked
+              className="bg-red-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-600 transition duration-300 text-center"
+            >
+              Delete Job
+            </button>
+          </div>
+        )}
 
         <Link
           to="/jobs"

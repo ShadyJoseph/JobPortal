@@ -6,8 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Logo from '../assets/Logo.jpg';
 import { logout } from '../store/actions/authActions';
 import { resetLogoutSuccess } from '../store/reducers/authReducer';
-import LogoutConfirmation from './LogoutConfirmation';
-
+import ConfirmationModal from './ConfirmationModal';
 const Header = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, user, logoutSuccess } = useSelector((state) => state.auth);
@@ -132,11 +131,12 @@ const Header = () => {
 
       {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (
-        <LogoutConfirmation
-          onConfirm={handleLogout}
-          onCancel={() => setShowLogoutConfirm(false)}
-          isLoading={isLoading}
-        />
+     <ConfirmationModal
+     message="Are you sure you want to logout?"
+     onConfirm={handleLogout}
+     onCancel={() => setShowLogoutConfirm(false)}
+     isLoading={isLoading} // Pass loading state to modal
+   />
       )}
     </header>
   );

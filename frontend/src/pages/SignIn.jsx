@@ -116,11 +116,6 @@ const SignIn = () => {
             )}
           </button>
         </form>
-
-        {/* Forgot Password & Register Links */}
-        <div className="mt-4 text-sm text-center">
-          <Link to="/forgot-password" className="text-blue-500 hover:underline">Forgot your password?</Link>
-        </div>
         <div className="mt-2 text-sm text-center">
           <span>Don't have an account? </span>
           <Link to="/register" className="text-blue-500 hover:underline">Register here</Link>
